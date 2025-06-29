@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %} 
+    <p>
+        Welcome <b>{{ request.user.username }}</b>, you are logged in as <b>{{ request.user.type }}</b>.
+    </p>
+
+    {% if request.user.type == 'STUDENT' or request.user.type == 'FACULTY' %}
+        <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+    {% elif request.user.type == 'ADMIN' or request.user.is_superuser %}
+        <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+        <a href="{% url 'admin:index' %}">Go to Admin Site</a>
+    {% endif %}
+
+    <br><br>
+    <a href="{% url 'user_logout' %}">Logout</a>
+
+{% else %}
+    <p>Welcome! Please choose an option:</p>
+
+    <ul>
+        <li><a href="{% url 'student_register' %}">Register as Student</a></li>
+        <li><a href="{% url 'faculty_register' %}">Register as Faculty</a></li>
+        <li><a href="{% url 'user_login' %}">Login</a></li>
+    </ul>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,133 @@
+{% extends 'base/base.html' %}
+{% block title %}Register for an Event{% endblock title %}
+{% block breadcrumb %}Register{% endblock breadcrumb %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h4>Event Registration</h4>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-success" href="{% url 'my-events' %}">My Events</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post" id="registration-form" action="{% url 'register-event' %}">
+                    {% csrf_token %}
+
+                    <!-- Select Event -->
+                    <div class="form-group">
+                        <label>Select Event:</label>
+                        <select id="event-select" name="event" class="form-control" required>
+                            <option value="">-- Select an Event --</option>
+                            {% for event in events %}
+                                <option value="{{ event.id }}" data-max-size="{{ event.max_team_size }}">
+                                    {{ event.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Team Details -->
+                    <div class="form-group">
+                        <label>Team Name:</label>
+                        <input type="text" name="team_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>UPI ID:</label>
+                        <input type="text" name="upi_id" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Team Size:</label>
+                        <select id="team-size-select" name="team_size" class="form-control" required>
+                            <option value="">-- Select Team Size --</option>
+                        </select>
+                    </div>
+
+                    <!-- Member Details -->
+                    <div id="members-container"></div>
+
+                    <button type="submit" class="btn btn-success mt-3">Register</button>
+                </form>
+
+                {% if messages %}
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        {% for message in messages %}
+                            Swal.fire({
+                                icon: "{% if 'error' in message.tags %}error{% elif 'warning' in message.tags %}warning{% elif 'success' in message.tags %}success{% else %}info{% endif %}",
+                                title: "{{ message.tags|title }}",
+                                text: "{{ message|escapejs }}",
+                                timer: 4000,
+                                timerProgressBar: true,
+                                showConfirmButton: false
+                            });
+                        {% endfor %}
+                    });
+                </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Dynamic Form Fields -->
+<script>
+    document.getElementById('event-select').addEventListener('change', function() {
+        let maxSize = this.options[this.selectedIndex].getAttribute('data-max-size');
+        let teamSizeSelect = document.getElementById('team-size-select');
+        
+        // Clear and populate team size dropdown
+        teamSizeSelect.innerHTML = '<option value="">-- Select Team Size --</option>';
+        for (let i = 1; i <= maxSize; i++) {
+            let option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            teamSizeSelect.appendChild(option);
+        }
+
+        // Reset members container and team size selection
+        document.getElementById('members-container').innerHTML = '';
+        teamSizeSelect.value = '';
+    });
+
+    document.getElementById('team-size-select').addEventListener('change', function() {
+        let teamSize = parseInt(this.value);
+        let membersContainer = document.getElementById('members-container');
+        membersContainer.innerHTML = ""; // Clear existing fields
+
+        for (let i = 1; i <= teamSize; i++) {
+            let memberHtml = `
+                <div class="card mt-2 p-2">
+                    <h5>Member ${i}</h5>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" name="member_${i}_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>College Name:</label>
+                        <input type="text" name="member_${i}_college" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" name="member_${i}_email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number:</label>
+                        <input type="text" name="member_${i}_phone" class="form-control" required>
+                    </div>
+                </div>
+            `;
+            membersContainer.innerHTML += memberHtml;
+        }
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,172 @@
+{% load static %}
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link">
+        <img src="{% static 'img/Moon.png' %}" alt="Moon" class="brand-image elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">Admin Panel</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="{% static 'img/Mountain.png' %}" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="{% url 'profile' %}" class="d-block">DEEBIKHA YUKESH</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a href="{% url 'dashboard' %}" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+
+                <!-- Event Category -->
+                <li class="nav-item has-treeview menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-folder"></i>
+                        <p>Event Category <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'create-event-category' %}" class="nav-link">
+                                <i class="far fa fa-edit nav-icon"></i>
+                                <p>Create Category</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'event-category-list' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>Category List</p>
+                            </a>
+                        </li>
+                        <!-- Dynamically Loaded Categories -->
+                        {% for category in categories %}
+                        <li class="nav-item">
+                            <a href="{% url 'event-category-detail' pk=category.id %}" class="nav-link">
+                                <i class="far fa fa-folder nav-icon"></i>
+                                <p>{{ category.name }}</p>
+                            </a>
+                        </li>
+                        {% empty %}
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                <!-- Events Section -->
+                <li class="nav-item has-treeview menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p>Events <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'event-create' %}" class="nav-link">
+                                <i class="far fa fa-edit nav-icon"></i>
+                                <p>Create Event</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="{% url 'event-list' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>Event List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'register-event' %}" class="nav-link">
+                                <i class="far fa fa-edit nav-icon"></i>
+                                <p>Registration</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'my-events' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>My Events</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'cancel-registration' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>Cancel Registration</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'add-event-wish-user' %}" class="nav-link">
+                                <i class="far fa fa-edit nav-icon"></i>
+                                <p>Add Event Wish User</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'event-wish-list' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>Event Wish List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'complete-event' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>Complete Event List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'attendance_list' %}" class="nav-link">
+                                <i class="fas fa-calendar-check"></i> Attendance
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="{% url 'absence-user' %}" class="nav-link">  <!-- ✅ Fixed Name -->
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>Absence User</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'create-user-mark' %}" class="nav-link">
+                                <i class="far fa fa-edit nav-icon"></i>
+                                <p>Create User Mark</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'user-mark' %}" class="nav-link">
+                                <i class="far fa fa-list nav-icon"></i>
+                                <p>User Mark List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'feedback' %}"><i class="fas fa-comment"></i> Feedback</a>
+                        </li>
+                        
+                        <!-- Newly Created Events - Dynamic -->
+                        <li class="nav-header">Recent Events</li>
+                        {% for event in events %}
+                        <li class="nav-item">
+                            <a href="{% url 'event-detail' pk=event.id %}" class="nav-link">
+                                <i class="far fa-calendar-alt nav-icon"></i>
+                                <p>{{ event.name }}</p>
+                            </a>
+                        </li>
+                        {% empty %}
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="far fa-calendar-alt nav-icon"></i>
+                                <p>No Recent Events</p>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

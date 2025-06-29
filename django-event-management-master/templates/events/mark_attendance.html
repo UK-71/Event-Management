@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+{% block title %}Mark Attendance{% endblock %}
+{% block breadcrumb %}Mark Attendance{% endblock %}
+
+{% block content %}
+<h2>Mark Attendance for: {{ event.name }}</h2>
+
+<form method="post" action="{% url 'mark-attendance' event.id %}">
+    {% csrf_token %}
+    
+    <h4>Teams Registered</h4>
+
+    {% for registration in registrations %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>{{ registration.team_name }}</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Team Size:</strong> {{ registration.team_size }}</p>
+                <p><strong>UPI ID:</strong> {{ registration.upi_id }}</p>
+                
+                <h5>Participants</h5>
+                <ul>
+                    {% for member in registration.team_members.all %}
+                        <li>
+                            <strong>{{ member.name }}</strong> ({{ member.email }}, {{ member.contact_number }})
+                            <br>
+                            <label for="attendance_{{ member.id }}">Present:</label>
+                            <input type="radio" name="attendance_{{ member.id }}" value="present" id="attendance_{{ member.id }}_present"> Present
+                            <input type="radio" name="attendance_{{ member.id }}" value="absent" id="attendance_{{ member.id }}_absent" checked> Absent
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Save Attendance</button>
+</form>
+{% endblock %}

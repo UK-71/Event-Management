@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+{% block title %}Cancel Registration{% endblock title %}
+{% block breadcrumb %}Cancel Registration{% endblock breadcrumb %}
+
+{% block content %}
+    <h1>Cancel Registration</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if registered_events %}
+        <ul>
+            {% for registration in registered_events %}
+                <li>
+                    <p>Event: {{ registration.event.name }} | Status: {{ registration.status }}</p>
+                    <form method="POST" action="{% url 'cancel-registration' %}" onsubmit="return confirmCancellation();">
+                        {% csrf_token %}
+                        <input type="hidden" name="registration_id" value="{{ registration.id }}">
+                        <button class="btn btn-danger ml-2" type="submit">Remove from My Events</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No registered events found.</p>
+    {% endif %}
+
+    <script>
+        function confirmCancellation() {
+            return confirm("Are you sure you want to cancel this registration?");
+        }
+    </script>
+{% endblock content %}
+

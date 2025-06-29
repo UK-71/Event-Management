@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Event Detail{% endblock title %}
+{% block breadcrumb %}Event Detail{% endblock breadcrumb %}
+
+{% block extrahead %}
+    {% load static %}
+    {% load custom_filters %}
+    <style>
+        @font-face { font-family: JuneBug; src: url({{ STATIC_URL }}fonts/Minion-Regular.ttf); }
+        span {
+            font-size: 20px;
+        }
+    </style>
+{% endblock extrahead %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5>Event Detail</h5>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <a class="btn btn-success" href="{% url 'event-list' %}">Event List</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
+                {% if event.images.first %}
+                    <img src="{{ event.images.first.image.url }}" alt="Image" height="500px" width="100%">
+                {% endif %}
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <tr>
+                                <td><span><strong>Event Name:</strong> {{ event.name }}</span></td>
+                                <td><span><strong>Id:</strong> {{ event.uid }}</span></td>
+                                <td><span><strong>Category:</strong> {{ event.category }}</span></td>
+                                <td><span><strong>Min Members:</strong> {{ event.min_team_size }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span><strong>Max Members:</strong> {{ event.max_team_size }}</span></td>
+                                <td><span><strong>Start Date:</strong> {{ event.start_date }}</span></td>
+                                <td><span><strong>End Date:</strong> {{ event.end_date }}</span></td>
+                                <td><span><strong>Max Attendees:</strong> {{ event.maximum_attendees }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span><strong>Venue:</strong> {{ event.venue }}</span></td>
+                                <td colspan="3">
+                                    <span>
+                                        <strong>Start Time:</strong> 
+                                        {% if event.eventagenda_set.first %}
+                                            {{ event.eventagenda_set.first.start_time }}
+                                        {% else %}
+                                            Not scheduled
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h4 class="mt-4">Description</h4>
+                        <p>{{ event.description|safe }}</p>
+                    </div>
+                </div>
+
+                <!-- Attendance Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5>Team Attendance</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if registrations %}
+                            {% for registration in registrations %}
+                                <div class="mb-4">
+                                    <h6 class="text-primary">Team: {{ registration.team.name }}</h6>
+                                    <p>
+                                        <strong>UPI ID:</strong> {{ registration.upi_id }} |
+                                        <strong>Team Size:</strong> {{ registration.team_members.all|length }}
+                                    </p>
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Member Name</th>
+                                                <th>Email</th>
+                                                <th>Contact</th>
+                                                <th>Attendance Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for member in registration.team_members.all %}
+                                                <tr>
+                                                    <td>{{ member.name }}</td>
+                                                    <td>{{ member.email }}</td>
+                                                    <td>{{ member.contact_number }}</td>
+                                                    <td>
+                                                        {% with status=attendance_lookup|get_attendance:member.id %}
+                                                            {% if status == "Present" %}
+                                                                <span class="text-success">Present</span>
+                                                            {% elif status == "Absent" %}
+                                                                <span class="text-danger">Absent</span>
+                                                            {% else %}
+                                                                <span class="text-muted">No Record</span>
+                                                            {% endif %}
+                                                        {% endwith %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center">No teams registered for this event.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

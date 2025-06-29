@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>{% block title %} {% endblock title %}</title>
+  {% include 'base/header.html' %}
+
+  {% block extrahead %}
+  <style>
+    /* Smooth transition for color changes */
+    a, button, .clickable {
+      cursor: pointer;
+      transition: color 0.3s ease-in-out;
+    }
+
+    /* Home text in gray */
+    .breadcrumb-item a {
+      color: gray !important;
+      text-decoration: none;
+    }
+
+    .breadcrumb-item a:hover {
+      color: black !important;
+    }
+
+    /* Hides the second breadcrumb (Dashboard) */
+    .breadcrumb-item.active {
+      display: none;
+    }
+
+  </style>
+  {% endblock extrahead %}
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<div class="wrapper">
+  <!-- Navbar -->
+  {% include 'base/navbar.html' %}
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  {% include 'base/sidebar.html' %}
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 class="m-0 dashboard-title">Dashboard</h4> <!-- Main Dashboard Title -->
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item clickable"><a href="#">Home</a></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  {% include 'base/footer.html' %}
+</div>
+<!-- ./wrapper -->
+
+{% include 'base/js.html' %}
+{% block extrascript %}
+{% endblock extrascript %}
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Teams for {{ event.name }}{% endblock %}
+
+{% block breadcrumb %}Teams{% endblock %}
+
+{% block content %}
+<h1>Registered Teams for {{ event.name }}</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Team Name</th>
+            <th>Team Size</th>
+            <th>Members</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in teams %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ team.team_name }}</td>
+            <td>{{ team.team_size }}</td>
+            <td>
+                <ul>
+                    {% for member in team.members %}
+                    <li>{{ member.name }} - {{ member.email }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

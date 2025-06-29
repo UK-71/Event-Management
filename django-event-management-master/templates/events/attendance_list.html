@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% block title %}Attendance List{% endblock %}
+{% block breadcrumb %}Attendance{% endblock %}
+
+{% block content %}
+<h1>Select an Event to Mark Attendance</h1>
+<form method="get" action="{% url 'mark-attendance' 0 %}" onsubmit="return updateAction(this)">
+    <div class="form-group">
+        <label>Select Event:</label>
+<select id="event-select" name="event" class="form-control">
+    <option value="">-- Select an Event --</option>
+    {% for event in events %}
+        {% if event.status == "active" %}
+            <option value="{{ event.id }}" data-max-size="{{ event.max_team_size }}">
+                {{ event.name }}
+            </option>
+        {% endif %}
+    {% endfor %}
+</select>
+
+    </div>
+    <button type="submit" class="btn btn-primary">Proceed to Attendance</button>
+</form>
+
+<script>
+function updateAction(form) {
+    const selected = document.getElementById("event-select").value;
+    if (!selected) return false;
+    form.action = `/events/mark-attendance/${selected}/`;
+    return true;
+}
+</script>
+{% endblock %}
