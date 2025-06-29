@@ -1,0 +1,13 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Page for Reports</h2>
+<p>Event Reports</p>
+
+{% if request.user.type in 'ADMIN' or request.user.type in 'FACULTY' %}
+    <button>Add Report</button>
+{% endif %}
+
+{% endblock content %}

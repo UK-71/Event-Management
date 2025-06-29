@@ -1,0 +1,13 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Page for Event</h2>
+<p>Students can register for the event.</p>
+
+{% if request.user.type == 'STUDENT' %}
+    <button>Register for Event</button>
+{% endif %}
+
+{% endblock content %}
